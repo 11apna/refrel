@@ -1,3 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Refer & Earn</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #0d0d0d;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 10%;
+      margin-bottom: 20px;
+    }
+
+    .ref-box {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .ref-link {
+      background: #0f0f0f;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      word-break: break-all;
+      margin-top: 10px;
+      position: relative;
+    }
+
+    .copy-btn {
+      margin-top: 10px;
+      padding: 10px 18px;
+      background: #00eaff;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      gap: 10px;
+    }
+
+    .stat-card {
+      flex: 1;
+      background: #111;
+      padding: 14px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .stat-card h3 {
+      margin: 0;
+      font-size: 24px;
+      color: #00eaff;
+    }
+
+    .stat-card p {
+      margin: 4px 0 0;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .milestone {
+      margin-top: 20px;
+      background: #111;
+      padding: 14px;
+      border-radius: 10px;
+    }
+
+    .milestone h4 {
+      margin-bottom: 10px;
+      color: #00eaff;
+    }
+
+    .milestone-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .milestone-item.locked {
+      opacity: 0.4;
+    }
+
+    .milestone-item.unlocked {
+      color: #00ff99;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #00ff99;
+      color: #000;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Refer & Earn</h2>
+
+  <div class="ref-box">
+    <p>Invite friends and earn real cash on their first deposit!</p>
+    <div class="ref-link" id="refLink">Loading...</div>
+    <button class="copy-btn" onclick="copyLink()">Copy Referral Link</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <h3 id="totalReferrals">0</h3>
+      <p>Total Invites</p>
+    </div>
+    <div class="stat-card">
+      <h3 id="totalEarned">₹0</h3>
+      <p>Total Earned</p>
+    </div>
+    <div class="stat-card">
+      <h3 id="validDeposits">0</h3>
+      <p>Valid Deposits</p>
+    </div>
+  </div>
+
+  <div class="milestone">
+    <h4>🏆 Milestones</h4>
+    <div class="milestone-item" id="m1">1 Invite → ₹100</div>
+    <div class="milestone-item" id="m10">10 Invites → ₹3,000</div>
+    <div class="milestone-item" id="m100">100 Invites → ₹40,000</div>
+    <div class="milestone-item" id="m1000">1000 Invites → ₹5,00,000</div>
+  </div>
+
+  <div class="toast" id="toast">Link Copied!</div>
+
+  <script>
+    // Get username from localStorage or fallback
+    const username = localStorage.getItem("APP_USER") || "Guest";
+    const refLink = `https://11apna.github.io/txeln#${username}`;
+
+    // Dummy data – replace with real backend
+    const referrals = JSON.parse(localStorage.getItem("REFERRALS") || "[]");
+    const validDeposits = referrals.filter(r => r.deposited).length;
+    const totalEarned = referrals.reduce((sum, r) => sum + (r.earned || 0), 0);
+
+    // DOM update
+    document.getElementById("refLink").textContent = refLink;
+    document.getElementById("totalReferrals").textContent = referrals.length;
+    document.getElementById("validDeposits").textContent = validDeposits;
+    document.getElementById("totalEarned").textContent = "₹" + totalEarned;
+
+    // Milestone unlock UI
+    const unlockMilestone = (id, count) => {
+      const el = document.getElementById(id);
+      if (el && count >= parseInt(id.replace("m", ""))) {
+        el.classList.add("unlocked");
+        el.classList.remove("locked");
+      }
+    };
+
+    unlockMilestone("m1", validDeposits);
+    unlockMilestone("m10", validDeposits);
+    unlockMilestone("m100", validDeposits);
+    unlockMilestone("m1000", validDeposits);
+
+    // Copy link
+    function copyLink() {
+      navigator.clipboard.writeText(refLink).then(() => {
+        const toast = document.getElementById("toast");
+        toast.style.display = "block";
+        setTimeout(() => toast.style.display = "none", 2000);
+      });
+    }
+  </script>
+
+</body>
+</html>
+
 <!-- Floating Top Bar -->
 <div class="killer-top-bar">
   <div class="brand-box">
